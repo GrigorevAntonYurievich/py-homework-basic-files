@@ -44,6 +44,27 @@ def get_shop_list_by_dishes(dishes, person_count, cook_book):
                     shop_list[ingredient_name]['quantity'] += quantity
 
     return shop_list
+def merge_files(file_names, output_file):
+    merged_content = []
+
+    # Чтение и сортировка файлов по количеству строк
+    files_data = []
+    for file_name in file_names:
+        with open(file_name, 'r', encoding='utf-8') as file:
+            file_content = file.readlines()
+            files_data.append({'name': file_name, 'line_count': len(file_content), 'content': file_content})
+
+    files_data.sort(key=lambda x: x['line_count'])
+
+    # Создание объединенного содержимого
+    for file_data in files_data:
+        merged_content.append(file_data['name'])
+        merged_content.append(str(file_data['line_count']))
+        merged_content.extend(file_data['content'])
+
+    # Запись в результирующий файл
+    with open(output_file, 'w', encoding='utf-8') as result_file:
+        result_file.writelines(merged_content)
 
 # Пример использования
 file_path = 'recipes.txt'
@@ -56,3 +77,9 @@ result_shop_list = get_shop_list_by_dishes(dishes_to_cook, person_count, cook_bo
 # Выводим полученный словарь
 for ingredient, info in result_shop_list.items():
     print(f'{ingredient}: {info["quantity"]} {info["measure"]}')
+
+# Объединение файлов
+file_names_to_merge = ['1.txt', '2.txt']  # Замените на реальные имена файлов
+output_merged_file = 'merged_file.txt'  # Замените на желаемое имя для результирующего файла
+
+merge_files(file_names_to_merge, output_merged_file)
